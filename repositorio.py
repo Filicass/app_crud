@@ -8,7 +8,7 @@ class TodoRepository:
 
     @staticmethod
     def get_by_id(todo_id):
-        return Todo.query.get(todo_id)
+        return db.session.get(Todo, todo_id)
     
     @staticmethod
     def create(title, description=None):
@@ -19,7 +19,7 @@ class TodoRepository:
 
     @staticmethod
     def update(todo_id, title=None, description=None, done=None):
-        todo = Todo.query.get(todo_id)
+        todo = db.session.get(Todo, todo_id)
         if todo:
             if title:
                 todo.title = title
@@ -27,7 +27,7 @@ class TodoRepository:
                 todo.description = description
             if done is not None:
                 todo.done = done
-                db.session.commit()
+            db.session.commit()
         return todo
 
     @staticmethod
