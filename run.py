@@ -10,21 +10,16 @@ with app.app_context():
 def home():
     return 'Bem-vindo ao seu gerenciador de tarefas!'
 
-@app.route('/todos', methods=['GET'])
-def get_todos():
+@app.route('/todos/<int:todo_id>', methods=['GET'])
+def get_todo():
     todos = TodoRepository.get_all()
     return jsonify([{"id": todo.id, "title": todo.title, "description": todo.description, "done": todo.done} for todo in todos])
-
-#@app.route('/todos/<int:todo_id>', methods=['GET'])
-#def get_todo_by_id(todo_id):
-    #todo = TodoRepository.get_by_id(todo_id)
-    #if todo:
-        #return jsonify({"id": todo.id, "title": todo.title, "description": todo.description, "done": todo.done})
-    #return jsonify({"message": "Todo not found"}), 404
 
 @app.route('/todos', methods=['POST'])
 def create_todo():
     data = request.json
+    if not data or 'title' not in data:
+        return jsonify({'error':'Title is required'}), 400
     new_todo = TodoRepository.create(title=data['title'], description=data.get('description'))
     print(f"New todo created: {new_todo.id} - {new_todo.title}")
     return jsonify({"id": new_todo.id, "title": new_todo.title, "description": new_todo.description, "done": new_todo.done}), 201
