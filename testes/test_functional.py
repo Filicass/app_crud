@@ -25,21 +25,21 @@ class TestecrudFuncional(unittest.TestCase):
         #2 Ler o item criado(GET)
         response = self.client.get(f'/todos/{item_id}')
         self.assertEqual(response.status_code, 200)
-        self.assertEqual(response.get.get_json()['title'], 'Item Teste')
+        self.assertEqual(response.get_json()[0]['title'], 'Item Teste')
 
         #3 Actualizar o item(PUT)
-        response = self.cliente.put(f'/todos/{item_id}', json={'title': 'Item Atualizado', 'description': 'Descrição actualizada'})
+        response = self.client.put(f'/todos/{item_id}', json={'title': 'Item Atualizado', 'description': 'Descrição atualizada'})
         self.assertEqual(response.status_code, 200)
         #Verificando se o item foi actualizado
-        response = self.client.get(f'/todos{item_id}')
-        self.assertEqual(response.get_json()['title'], 'Item Actualizado')
-        self.assertEqual(response.get_json()['description'], 'Descrição atualizada')
+        response = self.client.get(f'/todos/{item_id}')
+        self.assertEqual(response.get_json()[0]['title'], 'Item Atualizado')
+        self.assertEqual(response.get_json()[0]['description'], 'Descrição atualizada')
 
         #4 Deletear o item (DELETE)
         response = self.client.delete(f'/todos/{item_id}')
         #verificar se o item foi removido(GET)
         response = self.client.get('/todos/{item_id}')
-        self.assertEqual((response.status_code, 404)) #O item nao deve mais existir
+        self.assertEqual(response.status_code, 404) #O item nao deve mais existir
 
     @classmethod
     def tearDownClass(cls):

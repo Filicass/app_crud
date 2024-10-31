@@ -35,7 +35,11 @@ class TodoRepository:
         todo = Todo.query.get(todo_id)
         if todo:
             db.session.delete(todo)
-            db.session.commit()
-            return True
+            try:
+                db.session.commit()
+                return True
+            except Exception as e:
+                db.session.rollback()
+                print(f'Error deleting todo: {e}')
         return False
         

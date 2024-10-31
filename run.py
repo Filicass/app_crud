@@ -11,7 +11,7 @@ def home():
     return 'Bem-vindo ao seu gerenciador de tarefas!'
 
 @app.route('/todos/<int:todo_id>', methods=['GET'])
-def get_todo():
+def get_todo(todo_id):
     todos = TodoRepository.get_all()
     return jsonify([{"id": todo.id, "title": todo.title, "description": todo.description, "done": todo.done} for todo in todos])
 
@@ -35,8 +35,8 @@ def update_todo(todo_id):
 @app.route('/todos/<int:todo_id>', methods=['DELETE'])
 def delete_todo(todo_id):
     if TodoRepository.delete(todo_id):
-        return ', 204'
-    return jsonify({'message': 'Todo not found'}, 404)
+        return '', 204
+    return jsonify({'message': 'Todo not found'}), 404
 
 if __name__ == '__main__':
     app.run(debug=True)
