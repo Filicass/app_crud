@@ -32,7 +32,7 @@ class TodoRepository:
 
     @staticmethod
     def delete(todo_id):
-        todo = Todo.query.get(todo_id)
+        todo = db.session.get(todo_id)
         if todo:
             db.session.delete(todo)
             try:
