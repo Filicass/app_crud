@@ -60,7 +60,11 @@ class TestCrudAPI(unittest.TestCase):
 
         #Temtar deletar o item criado usando o id da cptura
         delete_response = self.client.delete(f'/todos/{item_id}')
-        self.assertEqual(delete_response.status_code, 204, 'a resposta ao deletar deve ser 204')
+        self.assertEqual(delete_response.status_code, 204,) #a resposta ao deletar deve ser 204
+
+        #verificação da excluão
+        get_response = self.client.get(f'/todos/{item_id}')
+        self.assertEqual(get_response.status_code, 404) #item não encontrado após a exlusão
 
 if __name__=='__main__':
     unittest.main()

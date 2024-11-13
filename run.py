@@ -27,7 +27,10 @@ def create_todo():
 @app.route('/todos/<int:todo_id>', methods=['PUT'])
 def update_todo(todo_id):
     data = request.json
-    updated_todo = TodoRepository.update(todo_id, title=data['title'], description=data['description'], done=data.get('done'))
+    title = data.get('title')
+    description = data.get('description', '') #Definindo um valor padrão
+    done = data.get('done')
+    updated_todo = TodoRepository.update(todo_id, title=title, description=description, done=done)
     if updated_todo:
         return jsonify({'id': updated_todo.id, 'title': updated_todo.title, 'description': updated_todo.description, 'done': updated_todo.done}), 200
     return jsonify({'message': 'Todo not found'}), 404
