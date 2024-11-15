@@ -3,23 +3,38 @@ import unittest
 from app import app, db
 from models import Todo
 
-class TestCrudAPI(unittest.TestCase):
-    def setUp(self):
-        #configurando o app para o testes
+class ConfigTeste(unittest.TestCase):
+    @classmethod
+    def setUpClass(cls):
+        #configurando da app e banco de dados uma vez para a classe
         app.config['TESTING'] = True
         app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///:memory:' #Banco de dados em memoria
-        self.client = app.test_client()
-        with app.app_context():
-            db.create_all()
-            #Inserindo um Item de teste
-            new_item = Todo(title='Test Item', description='Justa test item')
-            db.session.add(new_item)
-            db.session.commit()
+        cls.app = app
+        cls.app_context() = cls.app.app_context():
+        cls.app_context.push()
 
+        #criando tabelas
+        db.create_all()
+
+        #Inserindo um item de teste
+        new_item = Todo(title='Test Item', description='Just a test item')
+        db.session.add(new_item)
+        db.session.commit()
+
+    @classmethod
+    def tearDownClass(cls):
+        #Removendo as tabelas e limpando o contexto da aplicação
+        db.session.remove()
+        db.drop_all()
+        cls.app_context.pop()
+
+    def setUp(self):
+        #Criando o cliente de teste antes de cada teste
+        self.client = self.app.test_client()
 
     def tearDown(self):
-        with app.app_context():
-            db.drop_all()
+        #Limpando a sessão do banco apos cada teste
+        db.session.rollback
 
     def test_create_item(self):
         #Teste para criação de um novo Todo

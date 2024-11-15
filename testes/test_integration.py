@@ -7,7 +7,7 @@ class TesteCrudIntegration(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         #configuração iniciais da aplicação e do cliente teste
-        cls.app = app
+        cls.app = app()
         cls.app.testing = True
         cls.client = cls.app.test_client()
         #criando um banco de dados
