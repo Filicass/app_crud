@@ -18,9 +18,9 @@ class CrudperformanceTest(HttpUser):
         #Teste de Leitura
         self.client.get(f'/todos/{todo_id}')
 
-    def upddate_todo(self, todo_id):
+    def update_todo(self, todo_id):
         #Teste de actualização
-        self.client.put(f'/todos{todo_id}', json={'tiltle': 'Item Teste Atualizado',}'done': True)
+        self.client.put(f'/todos/{todo_id}', json={'tiltle': 'Item Teste Atualizado', 'done': True})
 
     def delete_todo(self, todo_id):
         #Teste de exclusão

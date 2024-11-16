@@ -10,7 +10,7 @@ class ConfigTeste(unittest.TestCase):
         app.config['TESTING'] = True
         app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///:memory:' #Banco de dados em memoria
         cls.app = app
-        cls.app_context() = cls.app.app_context():
+        cls.app_context = cls.app.app_context()
         cls.app_context.push()
 
         #criando tabelas
@@ -34,8 +34,9 @@ class ConfigTeste(unittest.TestCase):
 
     def tearDown(self):
         #Limpando a sessão do banco apos cada teste
-        db.session.rollback
+        db.session.rollback()
 
+class TesteCrudUnit(ConfigTeste):   
     def test_create_item(self):
         #Teste para criação de um novo Todo
         response = self.client.post('/todos', json={'title': 'Item Teste', 'description': 'Just a test Item'})

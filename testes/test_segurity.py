@@ -1,14 +1,8 @@
 import unittest
 from app import app
+from testes.test_unit import ConfigTeste
 
-class TesteSeguranca(unittest.TestCase):
-
-    @classmethod
-    def setUpClass(cls):
-        cls.app = app
-        cls.app.testing = True
-        cls.client = cls.app.test_client()
-
+class TesteSeguranca(ConfigTeste):
     def test_acesso_sem_autenticação(self):
         #Tentando acessar um recurso protegido sem autenticação
         response = self.client.get('/todos')
@@ -16,7 +10,7 @@ class TesteSeguranca(unittest.TestCase):
 
     def test_acesso_com_token_invalido(self):
         #Tentando um recurso protegido com token invalido
-        headers = {'Autthorization': 'Bearer token_invalido'}
+        headers = {'Authorization': 'Bearer token_invalido'}
         response = self.client.get('/todos', headers = headers)
         self.assertEqual(response.status_code, 401, 'Deveria retornar 401 para token ivalido')
 
@@ -28,6 +22,6 @@ class TesteSeguranca(unittest.TestCase):
         self.assertNotEqual(response.status_code, 201, 'Injeção SQL nao deveria funcionar')
         self.assertNotIn('DROP TABLE', response.get_data(as_text=True))
 
-if __name__ == '_-main__':
+if __name__ == '__main__':
     unittest.main()
     

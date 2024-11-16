@@ -1,25 +1,9 @@
 import unittest
 from app import app, db
 from models import Todo
+from testes.test_unit import ConfigTeste
 
-class TesteCrudIntegration(unittest.TestCase):
-
-    @classmethod
-    def setUpClass(cls):
-        #configuração iniciais da aplicação e do cliente teste
-        cls.app = app()
-        cls.app.testing = True
-        cls.client = cls.app.test_client()
-        #criando um banco de dados
-        with cls.app.app_context():
-            db.create_all()
-    
-    @classmethod
-    def tearDownClass(cls):
-        #limpar o banco de dados apos os testes
-        with cls.app.app_context():
-            db.drop_all()
-
+class TesteCrudIntegration(ConfigTeste):
     def test_full_crud_flow(self):
         #1 criação
         response = self.client.post('/todos', json={'title': 'Novo Item', 'description': 'Teste de Integração'})
