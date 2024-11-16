@@ -26,7 +26,7 @@ def create_todo():
 
 @app.route('/todos/<int:todo_id>', methods=['PUT'])
 def update_todo(todo_id):
-    data = request.json
+    data = request.get_json()
     title = data.get('title')
     description = data.get('description', '') #Definindo um valor padrão
     done = data.get('done')
