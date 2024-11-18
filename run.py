@@ -27,13 +27,16 @@ def create_todo():
 @app.route('/todos/<int:todo_id>', methods=['PUT'])
 def update_todo(todo_id):
     data = request.get_json()
-    title = data.get('title')
-    description = data.get('description', '') #Definindo um valor padrão
-    done = data.get('done')
-    updated_todo = TodoRepository.update(todo_id, title=title, description=description, done=done)
-    if updated_todo:
-        return jsonify({'id': updated_todo.id, 'title': updated_todo.title, 'description': updated_todo.description, 'done': updated_todo.done}), 200
-    return jsonify({'message': 'Todo not found'}), 404
+    todo = db.session.get(Todo, todo_id)
+    if not todo:
+        return jsonify({'message': 'Todo not found'}), 404
+    
+    todo.title = data.get('title', todo.title)
+    todo.description = data.get('description', todo.description)
+    todo.done = data.get('done', todo.done)
+    db.session.commit()
+    return jsonify(todo.to_dict()), 200
+    
 
 @app.route('/todos/<int:todo_id>', methods=['DELETE'])
 def delete_todo(todo_id):
