@@ -14,15 +14,15 @@ class TestecrudFuncional(ConfigTeste):
         #2 Ler o item criado(GET)
         response = self.client.get(f'/todos/{item_id}')
         self.assertEqual(response.status_code, 200)
-        self.assertEqual(response.get_json()[0]['title'], 'Test Item')
+        self.assertEqual(response.get_json()['title'], 'Test Item')
 
         #3 Actualizar o item(PUT)
         response = self.client.put(f'/todos/{item_id}', json={'title': 'Item Atualizado', 'description': 'Descrição atualizada'})
         self.assertEqual(response.status_code, 200)
         #Verificando se o item foi actualizado
         response = self.client.get(f'/todos/{item_id}')
-        self.assertEqual(response.get_json()[0]['title'], 'Item Atualizado')
-        self.assertEqual(response.get_json()[0]['description'], 'Descrição atualizada')
+        self.assertEqual(response.get_json()['title'], 'Item Atualizado')
+        self.assertEqual(response.get_json()['description'], 'Descrição atualizada')
 
         #4 Deletear o item (DELETE)
         response = self.client.delete(f'/todos/{item_id}')

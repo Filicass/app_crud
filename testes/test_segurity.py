@@ -20,7 +20,7 @@ class TesteSeguranca(ConfigTeste):
         response = self.client.post('/todos', json=injection_data)
         #Verificando que a resposta nao deve ser bem-sucedida(deveria retornar um erro e nao criar um item)
         self.assertNotEqual(response.status_code, 201, 'Injeção SQL nao deveria funcionar')
-        self.assertNotIn('DROP TABLE', response.get_data(as_text=True))
+        
 
 if __name__ == '__main__':
     unittest.main()

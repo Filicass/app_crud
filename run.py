@@ -12,8 +12,17 @@ def home():
 
 @app.route('/todos/<int:todo_id>', methods=['GET'])
 def get_todo(todo_id):
-    todos = TodoRepository.get_all()
-    return jsonify([{"id": todo.id, "title": todo.title, "description": todo.description, "done": todo.done} for todo in todos])
+    todo = TodoRepository.get_by_id(todo_id)
+    if not todo:
+        return jsonify({'message': 'Todo not found'}), 404 #Retornar erro 404 se não encontrado
+
+    #Retornar o item como um dicionario
+    return jsonify({
+        "id": todo.id,
+        "title": todo.title,
+        "description": todo.description,
+        "done": todo.done
+        }), 200
 
 @app.route('/todos', methods=['POST'])
 def create_todo():

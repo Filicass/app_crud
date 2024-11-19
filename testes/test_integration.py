@@ -23,8 +23,8 @@ class TesteCrudIntegration(ConfigTeste):
         #4 confirmação de actualização
         response = self.client.get(f'/todos/{item_id}')
         data = response.get_json()
-        self.assertEqual(data[0]['title'],'Item Atualizado')
-        self.assertTrue(data[0]['done'])
+        self.assertEqual(data['title'],'Item Atualizado')
+        self.assertTrue(data['done'])
 
         #5 Excusão
         response = self.client.delete(f'/todos/{item_id}')
