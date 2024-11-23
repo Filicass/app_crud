@@ -2,6 +2,7 @@ from run import app
 import unittest
 from app import app, db
 from models import Todo
+from flask_jwt_extended import create_access_token
 
 class ConfigTeste(unittest.TestCase):
     @classmethod
@@ -21,6 +22,9 @@ class ConfigTeste(unittest.TestCase):
         db.session.add(new_item)
         db.session.commit()
 
+        #criando um token de teste
+        cls.test_token = create_access_token(identity='test_user')
+
     @classmethod
     def tearDownClass(cls):
         #Removendo as tabelas e limpando o contexto da aplicação
@@ -39,6 +43,7 @@ class ConfigTeste(unittest.TestCase):
 class TesteCrudUnit(ConfigTeste):   
     def test_create_item(self):
         #Teste para criação de um novo Todo
+        headers = {'Authorization': f'Bearer{self.test_token}'}
         response = self.client.post('/todos', json={'title': 'Item Teste', 'description': 'Just a test Item'})
         self.assertEqual(response.status_code, 201)
         data = response.get_json()
@@ -61,12 +66,14 @@ class TesteCrudUnit(ConfigTeste):
 
     def test_update_item(self):
         #Teste para actualizar um  item existente
+        headers = {'Authorization': f'Bearer{self.test_token}'}
         self.client.post('/todos', json={'title': 'Item Teste', 'description': 'Just a test Item'})
         response = self.client.put('/todos/1', json={'title': 'Item Actualizado', 'description': 'Just a test Item'})
         self.assertEqual(response.status_code, 200)
 
     def test_delete_item(self):
         #Teste para deletar um item existente
+        headers = {'Authorization': f'Bearer{self.test_token}'}
         post_response = self.client.post('/todos', json={'title': 'Item Teste', 'description': 'Just a test Item'})
         self.assertEqual(post_response.status_code,201) #confirmando que o item foi criado
 

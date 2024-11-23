@@ -4,7 +4,18 @@ from models import Todo
 from testes.test_unit import ConfigTeste
 
 class TestecrudFuncional(ConfigTeste):
+    def login_and_get_token(self):
+        #Simula o login para obeter um token JWT
+        response = self.client.post('/login',json={'username': 'Test_user', 'password': 'test_password'})
+        self.assertEqual(response.status_code, 200, 'Login falhou')
+        data = response.get_json()
+        return data.get('access_token')
+    
     def test_full_crud_flow(self):
+        #Realizanfo um login e obtendo token
+        token = self.login_and_get_token()
+        headers = {'Authorization': f'Bearer{token}'}
+
         #1. criar um novo item(POST)
         response = self.client.post('/todos', json={'title': 'Test Item', 'description': 'Item criado no teste Funcional'})
         self.assertEqual(response.status_code, 201)
@@ -27,7 +38,7 @@ class TestecrudFuncional(ConfigTeste):
         #4 Deletear o item (DELETE)
         response = self.client.delete(f'/todos/{item_id}')
         #verificar se o item foi removido(GET)
-        response = self.client.get('/todos/{item_id}')
+        response = self.client.get(f'/todos/{item_id}', headers=headers)
         self.assertEqual(response.status_code, 404) #O item nao deve mais existir
 
 if __name__ == '__main__':

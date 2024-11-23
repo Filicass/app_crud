@@ -4,6 +4,15 @@ from models import Todo
 from testes.test_unit import ConfigTeste
 
 class TesteCrudIntegration(ConfigTeste):
+    def setUp(self):
+        super().setUp()
+        #criar um usuario de teste e obter token
+        response = self.client.post('/auth/login', json={'usarname': 'testuser', 'password': 'testpassword'})
+        self.assertEqual(response.status_code, 200)
+        self.token = response.get_json()['access_token']
+        self.headers = {'Authorization': f'Bearer{self.token}'}
+
+
     def test_full_crud_flow(self):
         #1 criação
         response = self.client.post('/todos', json={'title': 'Novo Item', 'description': 'Teste de Integração'})
@@ -27,7 +36,7 @@ class TesteCrudIntegration(ConfigTeste):
         self.assertTrue(data['done'])
 
         #5 Excusão
-        response = self.client.delete(f'/todos/{item_id}')
+        response = self.client.delete(f'/todos/{item_id}', headers=self.headers)
         self.assertEqual(response.status_code, 204)
 
         #6 confirmação da exclusão

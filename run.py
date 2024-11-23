@@ -2,6 +2,7 @@ from flask import request, jsonify
 from app import app, db
 from models import Todo
 from repositorio import TodoRepository
+from flask_jwt_extended import jwt_required
 
 with app.app_context():
     db.create_all() 
@@ -25,6 +26,7 @@ def get_todo(todo_id):
         }), 200
 
 @app.route('/todos', methods=['POST'])
+@jwt_required()
 def create_todo():
     data = request.json
     if not data or 'title' not in data:
@@ -34,6 +36,7 @@ def create_todo():
     return jsonify({"id": new_todo.id, "title": new_todo.title, "description": new_todo.description, "done": new_todo.done}), 201
 
 @app.route('/todos/<int:todo_id>', methods=['PUT'])
+@jwt_required()
 def update_todo(todo_id):
     data = request.get_json()
     todo = db.session.get(Todo, todo_id)
@@ -48,6 +51,7 @@ def update_todo(todo_id):
     
 
 @app.route('/todos/<int:todo_id>', methods=['DELETE'])
+@jwt_required()
 def delete_todo(todo_id):
     if TodoRepository.delete(todo_id):
         return '', 204
